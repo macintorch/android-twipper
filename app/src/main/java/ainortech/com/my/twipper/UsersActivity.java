@@ -34,9 +34,13 @@ public class UsersActivity extends AppCompatActivity {
 
         setTitle("Twipper User List");
 
+        if (ParseUser.getCurrentUser().get("isFollowing") == null) {
 
+            List<String> emptyList = new ArrayList<>();
+            ParseUser.getCurrentUser().put("isFollowing", emptyList);
+        }
 
-        ListView usersListView = findViewById(R.id.usersListView);
+        final ListView usersListView = findViewById(R.id.usersListView);
 
         usersListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
@@ -51,8 +55,22 @@ public class UsersActivity extends AppCompatActivity {
 
                 if (checkedTextView.isChecked()) {
                     Log.i("Info", "Row is checked");
+
+                    //ParseUser.getCurrentUser().getList("isFollowing").add(users.get(i));
+                    ParseUser.getCurrentUser().add("isFollowing", users.get(i));
+
+                    ParseUser.getCurrentUser().saveInBackground();
                 } else {
                     Log.i("Info", "Row is not checked");
+
+                   // ParseUser.getCurrentUser().getList("isFollowing").remove(users.get(i));
+
+                    ParseUser.getCurrentUser().getList("isFollowing").remove(users.get(i));
+                    List newList = ParseUser.getCurrentUser().getList("isFollowing");
+                    ParseUser.getCurrentUser().remove("isFollowing");
+                    ParseUser.getCurrentUser().put("isFollowing", newList);
+
+                    ParseUser.getCurrentUser().saveInBackground();
                 }
             }
         });
@@ -75,6 +93,14 @@ public class UsersActivity extends AppCompatActivity {
                         }
 
                         arrayAdapter.notifyDataSetChanged();
+
+                        // check if user already follow another user or not
+
+                        for (String username : users) {
+                            if (ParseUser.getCurrentUser().getList("isFollowing").contains(username)) {
+                                usersListView.setItemChecked(users.indexOf(username), true);
+                            }
+                        }
                     }
                 }
             }
