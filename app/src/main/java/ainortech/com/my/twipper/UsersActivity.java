@@ -16,11 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +62,22 @@ public class UsersActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Log.i("Info", tweetEditText.getText().toString());
+
+                    ParseObject tweet = new ParseObject("Tweet");
+
+                    tweet.put("username", ParseUser.getCurrentUser().getUsername());
+                    tweet.put("tweet", tweetEditText.getText().toString());
+
+                    tweet.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Toast.makeText(UsersActivity.this,"Tweet sent successfully", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(UsersActivity.this,"Tweet failed to send.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
                 }
             });
 
