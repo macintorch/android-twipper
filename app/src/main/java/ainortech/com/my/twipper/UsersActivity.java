@@ -10,7 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class UsersActivity extends AppCompatActivity {
 
@@ -28,9 +34,7 @@ public class UsersActivity extends AppCompatActivity {
 
         setTitle("Twipper User List");
 
-        users.add("Asad");
-        users.add("Affan");
-        users.add("Azka");
+
 
         ListView usersListView = findViewById(R.id.usersListView);
 
@@ -49,6 +53,29 @@ public class UsersActivity extends AppCompatActivity {
                     Log.i("Info", "Row is checked");
                 } else {
                     Log.i("Info", "Row is not checked");
+                }
+            }
+        });
+
+        users.clear();
+
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+
+        query.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
+
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    if (objects.size() > 0) {
+
+                        for (ParseUser user: objects) {
+                            users.add(user.getUsername());
+
+                        }
+
+                        arrayAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         });
