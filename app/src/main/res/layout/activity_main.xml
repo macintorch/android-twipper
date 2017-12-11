@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_below="@+id/twipperImageView"
         android:layout_marginTop="65dp"
         android:ems="10"
         android:hint="Username"
@@ -49,4 +50,13 @@
         android:layout_marginTop="30dp"
         android:onClick="signUp"
         android:text="Sign Up"/>
+
+    <ImageView
+        android:id="@+id/twipperImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        app:srcCompat="@drawable/twipperlogo"/>
 </android.widget.RelativeLayout>

@@ -42,10 +42,11 @@ public class MainActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
 
+
         ParseUser parseUser = new ParseUser();
 
         parseUser.setUsername(usernameEditText.getText().toString());
-        parseUser.setUsername(passwordEditText.getText().toString());
+        parseUser.setPassword(passwordEditText.getText().toString());
 
         parseUser.signUpInBackground(new SignUpCallback() {
             @Override
