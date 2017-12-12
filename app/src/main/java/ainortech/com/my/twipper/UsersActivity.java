@@ -98,6 +98,10 @@ public class UsersActivity extends AppCompatActivity {
 
             startActivity(intent);
 
+        } else if (item.getItemId() == R.id.viewFeed) {
+            Intent intent = new Intent(getApplicationContext(), TweepFeedActivity.class);
+
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
