@@ -5,6 +5,12 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,22 +23,42 @@ public class TweepFeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweep_feed);
 
-        ListView tweepListView = findViewById(R.id.tweepListView);
+        setTitle("Twipper Feed");
 
-        List<Map<String,String>> tweepData = new ArrayList<Map<String,String>>();
+        final ListView tweepListView = findViewById(R.id.tweepListView);
 
-        for (int i = 1; i <= 5; i++) {
-            Map<String, String> tweepInfo = new HashMap<String, String>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Tweet");
 
-            tweepInfo.put("content","Tweep content " + Integer.toString(i));
+        query.whereContainedIn("username", ParseUser.getCurrentUser().getList("isFollowing"));
+        query.orderByDescending("createdAt");
+        query.setLimit(20);
 
-            tweepInfo.put("username", "User " + Integer.toString(i));
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    if (objects.size() > 0) {
 
-            tweepData.add(tweepInfo);
-        }
+                        List<Map<String,String>> tweepData = new ArrayList<Map<String,String>>();
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, tweepData, android.R.layout.simple_list_item_2, new String[] {"content", "username"}, new int[] {android.R.id.text1, android.R.id.text2});
+                        for (ParseObject tweep : objects) {
 
-        tweepListView.setAdapter(simpleAdapter);
+                                Map<String, String> tweepInfo = new HashMap<String, String>();
+
+                                tweepInfo.put("content", tweep.getString("tweet"));
+
+                                tweepInfo.put("username", "by " + tweep.getString("username"));
+
+                                tweepData.add(tweepInfo);
+
+                        }
+
+                        SimpleAdapter simpleAdapter = new SimpleAdapter(TweepFeedActivity.this, tweepData, android.R.layout.simple_list_item_2, new String[] {"content", "username"}, new int[] {android.R.id.text1, android.R.id.text2});
+
+                        tweepListView.setAdapter(simpleAdapter);
+                    }
+                }
+            }
+        });
     }
 }

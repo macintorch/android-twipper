@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         parseUser.setPassword(passwordEditText.getText().toString());
 
         parseUser.signUpInBackground(new SignUpCallback() {
+
             @Override
             public void done(ParseException e) {
                 if (e == null) {
@@ -81,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("Twipper Login/Signup");
 
-        Log.i("UserInfo", String.valueOf(ParseUser.getCurrentUser().getUsername()));
+       // Log.i("UserInfo", String.valueOf(ParseUser.getCurrentUser().getUsername()));
 
-        redirectUser();
+       // redirectUser();
     }
 }
